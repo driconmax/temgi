@@ -8,12 +8,12 @@ namespace temgi {
 
     }
 
-    void* Memory::allocateMain(std::size_t bytes) {
-        return manager_.allocateMain(bytes);
+    void* Memory::allocateMain(std::size_t bytes, std::size_t alignment) {
+        return manager_.allocateMain(bytes, alignment);
     }
 
-    void *temgi::Memory::allocateFast(std::size_t bytes)
+    void *temgi::Memory::allocateFast(std::size_t bytes, std::size_t alignment)
     {
-        return manager_.allocateFast(bytes);
+        return manager_.allocateFast(bytes, alignment);
     }
 }

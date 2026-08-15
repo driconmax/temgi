@@ -1,5 +1,6 @@
 #include "MemoryRegion.h"
 
+#include <cstdint>
 #include <utility>
 
 namespace temgi
@@ -8,11 +9,19 @@ namespace temgi
 
     }
 
-    void *MemoryRegion::allocate(std::size_t bytes)
+    void *MemoryRegion::allocate(std::size_t bytes, std::size_t alignment)
     {
-        if(used_ + bytes > data_.size()){
+
+        std::byte* current = data_.data() + used_;
+
+        std::uintptr_t address = reinterpret_cast<std::uintptr_t>(current);
+        std::size_t padding = (alignment - (address % alignment)) % alignment;
+
+        if(used_ + padding + bytes > data_.size()){
             return nullptr;
         }
+
+        used_ += padding;
 
         void* result = data_.data() + used_;
 

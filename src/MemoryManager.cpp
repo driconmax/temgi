@@ -15,14 +15,14 @@ namespace temgi
         
     }
 
-    void *MemoryManager::allocateMain(std::size_t bytes)
+    void *MemoryManager::allocateMain(std::size_t bytes, std::size_t alignment)
     {
-        return mainRam_.allocate(bytes);
+        return mainRam_.allocate(bytes, alignment);
     }
 
-    void *MemoryManager::allocateFast(std::size_t bytes)
+    void *MemoryManager::allocateFast(std::size_t bytes, std::size_t alignment)
     {
-        return fastRam_.allocate(bytes);
+        return fastRam_.allocate(bytes, alignment);
     }
 
     std::size_t MemoryManager::mainUsed() const{
