@@ -8,6 +8,19 @@ namespace temgi
 
     }
 
+    void *MemoryRegion::allocate(std::size_t bytes)
+    {
+        if(used_ + bytes > data_.size()){
+            return nullptr;
+        }
+
+        void* result = data_.data() + used_;
+
+        used_ += bytes;
+
+        return result;
+    }
+
     std::size_t MemoryRegion::capacity() const {
         return data_.size();
     }

@@ -3,8 +3,9 @@ cmake_minimum_required(VERSION 3.20)
 project(temgi VERSION 0.1.0 LANGUAGES CXX)
 
 add_library(temgi STATIC
-    src/MemoryRegion.cpp
     src/MemoryManager.cpp
+    src/MemoryRegion.cpp
+    src/Memory.cpp
 )
 
 target_include_directories(temgi
@@ -17,6 +18,21 @@ target_compile_features(temgi
 )
 
 add_library(TEMGI::Console ALIAS temgi)
+
+
+### TESTS ###
+
+add_executable(memory-test
+    tests/MemoryTest.cpp
+)
+
+target_link_libraries(memory-test
+    PRIVATE temgi
+)
+
+target_include_directories(memory-test
+    PRIVATE src
+)
 
 
 #add_custom_command(

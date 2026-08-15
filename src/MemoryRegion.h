@@ -9,6 +9,8 @@ namespace temgi {
         public:
             MemoryRegion(std::string name, std::size_t capacity);
 
+            void* allocate(std::size_t bytes);
+            
             std::size_t capacity() const;
             std::size_t used() const;
             std::size_t available() const;
