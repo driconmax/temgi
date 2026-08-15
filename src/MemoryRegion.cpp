@@ -1,0 +1,24 @@
+#include "MemoryRegion.h"
+
+#include <utility>
+
+namespace temgi
+{
+    MemoryRegion::MemoryRegion(std::string name, std::size_t capacity) : name_(std::move(name)), data_(capacity) {
+
+    }
+
+    std::size_t MemoryRegion::capacity() const {
+        return data_.size();
+    }
+
+    std::size_t MemoryRegion::used() const {
+        return used_;
+    }
+
+    std::size_t MemoryRegion::available() const {
+        return capacity() - used();
+    }
+
+
+} // namespace temgi
