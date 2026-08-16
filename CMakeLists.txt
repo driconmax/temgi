@@ -6,6 +6,7 @@ add_library(temgi STATIC
     src/MemoryManager.cpp
     src/MemoryRegion.cpp
     src/Memory.cpp
+    src/GraphicsProcessor.cpp
 )
 
 target_include_directories(temgi
@@ -31,6 +32,20 @@ target_link_libraries(memory-test
 )
 
 target_include_directories(memory-test
+    PRIVATE src
+)
+
+
+
+add_executable(graphics-test
+    tests/GraphicsTest.cpp
+)
+
+target_link_libraries(graphics-test
+    PRIVATE temgi
+)
+
+target_include_directories(graphics-test
     PRIVATE src
 )
 
