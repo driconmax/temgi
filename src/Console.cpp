@@ -2,7 +2,14 @@
 
 namespace temgi
 {
-    
+    Console::Console()
+        : memoryManager_(),
+        memory_(memoryManager_),
+        graphicsProcessor_(),
+        graphics_(graphicsProcessor_),
+        input_()
+    {
+    }
     
     Input &Console::input()
     {

@@ -2,7 +2,9 @@
 
 #include <temgi/Input.h>
 #include <temgi/Memory.h>
+#include "MemoryManager.h"
 #include <temgi/Graphics.h>
+#include "GraphicsProcessor.h"
 
 namespace temgi
 {
@@ -17,7 +19,11 @@ namespace temgi
             
         private:
             Input input_;
+            
+            MemoryManager memoryManager_;
             Memory memory_;
+
+            GraphicsProcessor graphicsProcessor_;
             Graphics graphics_;
     };
     

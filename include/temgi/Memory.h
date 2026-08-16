@@ -52,6 +52,7 @@ namespace temgi {
             std::size_t fastAvailable() const;
 
         private:
+            friend class Console;
             friend class MemoryManager;
 
             explicit Memory(MemoryManager& manager);
