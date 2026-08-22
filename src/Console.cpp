@@ -1,5 +1,8 @@
 #include "Console.h"
 
+#include <thread>
+#include <chrono>
+
 namespace temgi
 {
     Console::Console()
@@ -32,9 +35,45 @@ namespace temgi
             return false;
         }
 
-        cartridgeLoader_.cartridge()->start(*this);
+        return true;
+    }
 
-        return false;
+    void Console::unloadCartridge()
+    {
+        if (cartridgeLoader_.cartridge() != nullptr)
+        {
+            cartridgeLoader_.unload();
+        }
+        running_ = false;
+    }
+
+    void Console::run()
+    {
+        if (cartridgeLoader_.cartridge() == nullptr)
+        {
+            return;
+        }
+        running_ = true;
+
+        using Clock = std::chrono::steady_clock;
+
+        cartridgeLoader_.cartridge()->start(*this);
+        
+
+        while(running_){
+            
+            auto start = Clock::now();
+            
+            update();
+            auto elapsed = Clock::now() - start;
+
+            if(elapsed < ConsoleSpec::FRAME_DURATION){
+                std::this_thread::sleep_for(
+                    ConsoleSpec::FRAME_DURATION - elapsed
+                );
+            }
+        }
+
     }
 
     void Console::update()

@@ -23,12 +23,11 @@ namespace temgi
             Graphics& graphics();
 
             bool loadCartridge(const std::string& path);
+            void unloadCartridge();
 
             void setButton(Button button, bool pressed);
 
             const std::uint32_t* frameBuffer() const;
-
-            void update();
             
         private:
             Input input_;
@@ -40,6 +39,11 @@ namespace temgi
             Graphics graphics_;
 
             CartridgeLoader cartridgeLoader_;
+
+            bool running_;
+
+            void run();
+            void update();
     };
     
 } // namespace temgi
