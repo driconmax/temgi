@@ -20,5 +20,7 @@ namespace temgi
             void* libraryHandle_ = nullptr;
             CartridgeAPI* cartridge_ = nullptr;
 
+            std::string extractedLibraryPath_;
+
     };
 } // namespace temgi
