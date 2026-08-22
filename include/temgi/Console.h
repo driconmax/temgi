@@ -1,10 +1,15 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+
 #include <temgi/Input.h>
 #include <temgi/Memory.h>
-#include "MemoryManager.h"
 #include <temgi/Graphics.h>
+
+#include "MemoryManager.h"
 #include "GraphicsProcessor.h"
+#include "CartridgeLoader.h"
 
 namespace temgi
 {
@@ -16,6 +21,14 @@ namespace temgi
             Input& input();
             Memory& memory();
             Graphics& graphics();
+
+            bool loadCartridge(const std::string& path);
+
+            void setButton(Button button, bool pressed);
+
+            const std::uint32_t* frameBuffer() const;
+
+            void update();
             
         private:
             Input input_;
@@ -25,6 +38,8 @@ namespace temgi
 
             GraphicsProcessor graphicsProcessor_;
             Graphics graphics_;
+
+            CartridgeLoader cartridgeLoader_;
     };
     
 } // namespace temgi

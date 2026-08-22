@@ -27,6 +27,8 @@ namespace temgi
             Pixel color
         );
 
+        const GraphicsProcessor::Pixel* frameBuffer() const;
+
     private:
         friend class Console;
 

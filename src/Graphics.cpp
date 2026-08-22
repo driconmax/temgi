@@ -31,4 +31,9 @@ namespace temgi
     {
         processor_.drawSquare(x, y, width, height, color);
     }
+
+    const GraphicsProcessor::Pixel* Graphics::frameBuffer() const
+    {
+        return processor_.framebuffer();
+    }
 }
