@@ -59,6 +59,11 @@ namespace temgi
         }
         running_ = true;
 
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onConsoleStart();
+        }
+
         using Clock = std::chrono::steady_clock;
 
         cartridgeLoader_.cartridge()->start(*this);
@@ -92,6 +97,11 @@ namespace temgi
     void Console::stop()
     {
         running_ = false;
+
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onConsoleStop();
+        }
     }
 
     void Console::update(float deltaTime)
