@@ -29,6 +29,11 @@ namespace temgi
         return graphics_;
     }
 
+    void Console::subscribe(ConsoleEventSubscriber &subscriber)
+    {
+        subscribers_.push_back(&subscriber);
+    }
+
     bool Console::loadCartridge(const std::string &path)
     {
         if(!cartridgeLoader_.load(path)){
@@ -58,13 +63,22 @@ namespace temgi
 
         cartridgeLoader_.cartridge()->start(*this);
         
-
+        auto previousFrame = Clock::now();
+        
         while(running_){
             
-            auto start = Clock::now();
+            auto frameStart = Clock::now();
+
+            float deltaTime =
+                std::chrono::duration<float>(
+                    frameStart - previousFrame
+                ).count();
+
+            previousFrame = frameStart;
             
-            update();
-            auto elapsed = Clock::now() - start;
+            update(deltaTime);
+
+            auto elapsed = Clock::now() - frameStart;
 
             if(elapsed < ConsoleSpec::FRAME_DURATION){
                 std::this_thread::sleep_for(
@@ -80,14 +94,24 @@ namespace temgi
         running_ = false;
     }
 
-    void Console::update()
+    void Console::update(float deltaTime)
     {
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onFrameStart();
+        }
+
         if (cartridgeLoader_.cartridge() != nullptr)
         {
-            cartridgeLoader_.cartridge()->update(*this);
+            cartridgeLoader_.cartridge()->update(*this, deltaTime);
         }
 
         input_.nextFrame();
+
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onFrameEnd();
+        }
     }
 
     void Console::setButton(Button button, bool pressed)

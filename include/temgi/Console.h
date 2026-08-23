@@ -2,10 +2,12 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include <temgi/Input.h>
 #include <temgi/Memory.h>
 #include <temgi/Graphics.h>
+#include <temgi/ConsoleEventSubscriber.h>
 
 #include "MemoryManager.h"
 #include "GraphicsProcessor.h"
@@ -21,6 +23,8 @@ namespace temgi
             Input& input();
             Memory& memory();
             Graphics& graphics();
+
+            void subscribe(ConsoleEventSubscriber& subscriber);
 
             bool loadCartridge(const std::string& path);
             void unloadCartridge();
@@ -43,8 +47,10 @@ namespace temgi
 
             CartridgeLoader cartridgeLoader_;
 
-            bool running_;
-            void update();
+            bool running_ = false;
+            void update(float deltaTime);
+
+            std::vector<ConsoleEventSubscriber*> subscribers_;
     };
     
 } // namespace temgi

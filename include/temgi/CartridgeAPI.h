@@ -9,6 +9,6 @@ namespace temgi
             virtual ~CartridgeAPI() = default;
 
             virtual void start(Console& console) = 0;
-            virtual void update(Console& console) = 0;
+            virtual void update(Console& console, float deltaTime) = 0;
     };
 } // namespace temgi
