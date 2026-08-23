@@ -25,6 +25,9 @@ namespace temgi
             bool loadCartridge(const std::string& path);
             void unloadCartridge();
 
+            void run();
+            void stop();
+
             void setButton(Button button, bool pressed);
 
             const std::uint32_t* frameBuffer() const;
@@ -41,8 +44,6 @@ namespace temgi
             CartridgeLoader cartridgeLoader_;
 
             bool running_;
-
-            void run();
             void update();
     };
     

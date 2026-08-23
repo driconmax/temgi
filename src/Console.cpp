@@ -44,7 +44,6 @@ namespace temgi
         {
             cartridgeLoader_.unload();
         }
-        running_ = false;
     }
 
     void Console::run()
@@ -74,6 +73,11 @@ namespace temgi
             }
         }
 
+    }
+
+    void Console::stop()
+    {
+        running_ = false;
     }
 
     void Console::update()
