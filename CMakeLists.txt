@@ -40,7 +40,6 @@ target_include_directories(memory-test
 )
 
 
-
 add_executable(graphics-test
     tests/GraphicsTest.cpp
 )
@@ -53,6 +52,9 @@ target_include_directories(graphics-test
     PRIVATE src
 )
 
+
+### PACKER ###
+
 add_executable(temgi-pack
     tools/pack/main.cpp
 )
@@ -60,15 +62,3 @@ add_executable(temgi-pack
 target_link_libraries(temgi-pack
     PRIVATE temgi
 )
-
-#add_custom_command(
-#    TARGET game
-#    POST_BUILD
-#
-#    COMMAND temgi-pack
-#        $<TARGET_FILE:game>
-#        ${CMAKE_CURRENT_SOURCE_DIR}/assets
-#        ${CMAKE_CURRENT_BINARY_DIR}/game.temgi
-#
-#    COMMENT "Building TEMGI cartridge..."
-#)
