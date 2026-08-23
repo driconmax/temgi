@@ -1,4 +1,4 @@
-#include "GraphicsProcessor.h"
+#include "temgi/internal/GraphicsProcessor.h"
 
 #include <temgi/ConsoleSpec.h>
 

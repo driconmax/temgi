@@ -1,4 +1,5 @@
-#include "MemoryManager.h"
+
+#include "temgi/internal/MemoryManager.h"
 
 #include <temgi/ConsoleSpec.h>
 

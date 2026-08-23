@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "GraphicsProcessor.h"
+#include "temgi/internal/GraphicsProcessor.h"
 
 int main()
 {

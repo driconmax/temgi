@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "MemoryManager.h"
+#include "temgi/internal/MemoryManager.h"
 
 int main(int argc, char const *argv[])
 {

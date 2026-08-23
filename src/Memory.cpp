@@ -1,6 +1,6 @@
 #include <temgi/Memory.h>
 
-#include "MemoryManager.h"
+#include "temgi/internal/MemoryManager.h"
 #include "Memory.h"
 
 namespace temgi {

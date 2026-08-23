@@ -1,4 +1,5 @@
-#include "MemoryRegion.h"
+
+#include "temgi/internal/MemoryRegion.h"
 
 #include <cstdint>
 #include <utility>

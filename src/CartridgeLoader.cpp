@@ -1,4 +1,4 @@
-#include "CartridgeLoader.h"
+#include "temgi/internal/CartridgeLoader.h"
 
 #include <cstdint>
 #include <filesystem>

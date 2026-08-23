@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "temgi/Input.h"
 
 namespace temgi
 {

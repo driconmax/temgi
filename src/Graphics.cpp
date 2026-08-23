@@ -1,6 +1,6 @@
 #include <temgi/Graphics.h>
 
-#include "GraphicsProcessor.h"
+#include "temgi/internal/GraphicsProcessor.h"
 
 namespace temgi
 {
@@ -32,7 +32,7 @@ namespace temgi
         processor_.drawSquare(x, y, width, height, color);
     }
 
-    const GraphicsProcessor::Pixel* Graphics::frameBuffer() const
+    const Graphics::Pixel* Graphics::frameBuffer() const
     {
         return processor_.framebuffer();
     }

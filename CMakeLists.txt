@@ -3,10 +3,14 @@ cmake_minimum_required(VERSION 3.20)
 project(temgi VERSION 0.1.0 LANGUAGES CXX)
 
 add_library(temgi STATIC
+    src/Console.cpp
+    src/Memory.cpp
     src/MemoryManager.cpp
     src/MemoryRegion.cpp
-    src/Memory.cpp
+    src/Graphics.cpp
     src/GraphicsProcessor.cpp
+    src/Input.cpp
+    src/CartridgeLoader.cpp
 )
 
 target_include_directories(temgi
@@ -49,6 +53,13 @@ target_include_directories(graphics-test
     PRIVATE src
 )
 
+add_executable(temgi-pack
+    tools/pack/main.cpp
+)
+
+target_link_libraries(temgi-pack
+    PRIVATE temgi
+)
 
 #add_custom_command(
 #    TARGET game

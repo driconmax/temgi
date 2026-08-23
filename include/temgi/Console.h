@@ -9,9 +9,9 @@
 #include <temgi/Graphics.h>
 #include <temgi/ConsoleEventSubscriber.h>
 
-#include "MemoryManager.h"
-#include "GraphicsProcessor.h"
-#include "CartridgeLoader.h"
+#include <temgi/internal/MemoryManager.h>
+#include <temgi/internal/GraphicsProcessor.h>
+#include <temgi/internal/CartridgeLoader.h>
 
 namespace temgi
 {
