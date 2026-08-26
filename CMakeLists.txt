@@ -62,3 +62,19 @@ add_executable(temgi-pack
 target_link_libraries(temgi-pack
     PRIVATE temgi
 )
+
+
+### TIMG ###
+
+add_executable(temgi-image
+    tools/timg/main.cpp
+)
+
+target_include_directories(temgi-image
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb
+)
+
+target_link_libraries(temgi-image
+    PRIVATE temgi
+)
