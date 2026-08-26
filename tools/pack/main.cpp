@@ -13,6 +13,7 @@ int main(int argc, char const *argv[])
 {
     if(argc != 3){
         std::cout << "Usage: temgi-pack <input> <output.temgi>\n";
+        return 1;
     }
 
     const char* inputPath = argv[1];
@@ -22,6 +23,7 @@ int main(int argc, char const *argv[])
 
     if(!input){
         std::cerr << "Could not open the input file.\n";
+        return 1;
     }
 
     input.seekg(0, std::ios::end);
@@ -38,6 +40,7 @@ int main(int argc, char const *argv[])
 
     if(!output){
         std::cerr << "Could not create output file.\n";
+        return 1;
     }
 
     output.write(reinterpret_cast<const char*>(&header), sizeof(header));
