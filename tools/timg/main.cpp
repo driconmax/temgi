@@ -105,6 +105,8 @@ int main(int argc, char const *argv[])
 {
     if(argc != 3){
         std::cout << "Usage: temgi-image <input.png> <output.timg>\n";
+
+        return 1;
     }
 
     const char* inputPath = argv[1];
@@ -164,7 +166,20 @@ int main(int argc, char const *argv[])
         std::cerr << "Could not create output file.\n";
     }
 
-    output.write(reinterpret_cast<const char*>(&header), sizeof(header));
+    output.write(
+        header.magic,
+        5
+    );
+
+    output.write(
+        reinterpret_cast<const char*>(&header.width),
+        sizeof(header.width)
+    );
+
+    output.write(
+        reinterpret_cast<const char*>(&header.height),
+        sizeof(header.height)
+    );
     output.write(reinterpret_cast<const char*>(pixels.data()), static_cast<std::streamsize>(pixels.size()));
 
     std::cout
