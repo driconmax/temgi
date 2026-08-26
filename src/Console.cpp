@@ -129,7 +129,7 @@ namespace temgi
         input_.setButton(button, pressed);
     }
 
-    const std::uint32_t *Console::frameBuffer() const
+    const std::uint8_t *Console::frameBuffer() const
     {
         return graphics_.frameBuffer();
     }

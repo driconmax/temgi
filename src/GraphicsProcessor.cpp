@@ -30,6 +30,9 @@ namespace temgi
             return;
         }
 
+        if(x < 0) x = 0;
+        if(y < 0) y = 0;
+
         for (std::size_t ix = x; ix < x+size_x && ix < ConsoleSpec::SCREEN_WIDTH; ix++)
         {
             for (std::size_t iy = y; iy < y+size_y && iy < ConsoleSpec::SCREEN_HEIGHT; iy++)

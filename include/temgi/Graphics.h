@@ -9,7 +9,7 @@ namespace temgi
     class Graphics
     {
     public:
-        using Pixel = std::uint32_t;
+        using Pixel = std::uint8_t;
 
         void clear(Pixel color);
 
