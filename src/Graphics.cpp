@@ -37,6 +37,16 @@ namespace temgi
         processor_.drawImage(image, x, y);
     }
 
+    void Graphics::drawAnimationFrame(const Animation &animation, std::uint16_t frame, std::uint16_t x, std::uint16_t y)
+    {
+        processor_.drawAnimationFrame(
+            animation,
+            frame,
+            x,
+            y
+        );
+    }
+
     const Graphics::Pixel* Graphics::frameBuffer() const
     {
         return processor_.framebuffer();

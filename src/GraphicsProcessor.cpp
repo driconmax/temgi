@@ -60,6 +60,50 @@ namespace temgi
         
     }
 
+    void GraphicsProcessor::drawAnimationFrame(
+        const Animation& animation,
+        std::uint16_t frame,
+        std::uint16_t x,
+        std::uint16_t y)
+    {
+        if (frame >= animation.frameCount)
+        {
+            return;
+        }
+
+        const std::size_t frameSize =
+            static_cast<std::size_t>(animation.width) *
+            static_cast<std::size_t>(animation.height);
+
+        const std::uint8_t* framePixels =
+            animation.pixels +
+            frameSize * frame;
+
+        for (std::uint16_t iy = 0; iy < animation.height; ++iy)
+        {
+            for (std::uint16_t ix = 0; ix < animation.width; ++ix)
+            {
+                const std::size_t index =
+                    static_cast<std::size_t>(iy) *
+                    animation.width +
+                    ix;
+
+                Pixel pixel = framePixels[index];
+
+                if (pixel == 0x00)
+                {
+                    continue;
+                }
+
+                setPixel(
+                    x + ix,
+                    y + iy,
+                    pixel
+                );
+            }
+        }
+    }
+
     const GraphicsProcessor::Pixel* GraphicsProcessor::framebuffer() const
     {
         return framebuffer_.data();

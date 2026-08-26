@@ -64,10 +64,10 @@ target_link_libraries(temgi-pack
 )
 
 
-### TIMG ###
+### TIMG - Image ###
 
 add_executable(temgi-image
-    tools/timg/main.cpp
+    tools/image/main.cpp
 )
 
 target_include_directories(temgi-image
@@ -76,5 +76,21 @@ target_include_directories(temgi-image
 )
 
 target_link_libraries(temgi-image
+    PRIVATE temgi
+)
+
+
+### ATIMG - Image Atlas ###
+
+add_executable(temgi-atlas
+    tools/atlas/main.cpp
+)
+
+target_include_directories(temgi-atlas
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb
+)
+
+target_link_libraries(temgi-atlas
     PRIVATE temgi
 )
