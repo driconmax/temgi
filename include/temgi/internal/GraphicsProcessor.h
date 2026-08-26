@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include <temgi/ConsoleSpec.h>
+#include <temgi/Image.h>
 
 namespace temgi
 {
@@ -18,9 +19,7 @@ namespace temgi
             void drawSquare(std::uint16_t x, std::uint16_t y, std::uint16_t size_x, std::uint16_t size_y, Pixel color);
 
             void drawImage(
-                const Pixel* image,
-                std::uint16_t width,
-                std::uint16_t height,
+                const Image& image,
                 std::uint16_t x,
                 std::uint16_t y
             );

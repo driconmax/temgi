@@ -32,6 +32,11 @@ namespace temgi
         processor_.drawSquare(x, y, width, height, color);
     }
 
+    void Graphics::drawImage(const Image &image, std::uint16_t x, std::uint16_t y)
+    {
+        processor_.drawImage(image, x, y);
+    }
+
     const Graphics::Pixel* Graphics::frameBuffer() const
     {
         return processor_.framebuffer();

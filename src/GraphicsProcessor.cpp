@@ -42,6 +42,24 @@ namespace temgi
         }
     }
 
+    void GraphicsProcessor::drawImage(const Image &image, std::uint16_t x, std::uint16_t y)
+    {
+        for (std::uint16_t iy = 0; iy < image.height; iy++)
+        {
+            for (std::uint16_t ix = 0; ix < image.width; ix++)
+            {
+                std::size_t index = static_cast<std::size_t>(iy) * image.width + ix;
+
+                Pixel pixel = image.pixels[index];
+
+                if(pixel == 0x00) continue;
+
+                setPixel(x + ix, y + iy, pixel);
+            }
+        }
+        
+    }
+
     const GraphicsProcessor::Pixel* GraphicsProcessor::framebuffer() const
     {
         return framebuffer_.data();

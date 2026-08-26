@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <temgi/Image.h>
+
 namespace temgi
 {
     class GraphicsProcessor;
@@ -25,6 +27,12 @@ namespace temgi
             std::uint16_t width,
             std::uint16_t height,
             Pixel color
+        );
+
+        void drawImage(
+            const Image& image,
+            std::uint16_t x,
+            std::uint16_t y
         );
 
         const Pixel* frameBuffer() const;
