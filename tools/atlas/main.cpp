@@ -138,15 +138,15 @@ int main(int argc, char const *argv[])
 
     std::vector<FrameFile> frames;
 
-    /*std::regex framePattern(
+    std::regex framePattern(
         R"(^(.+)_([0-9]+)\.png$)",
         std::regex::icase
-    );*/
+    );
 
-    std::regex framePattern(
+    /*std::regex framePattern(
         R"(^(.+?)([0-9]+)\.png$)",
         std::regex::icase
-    );
+    );*/
 
     std::string animationName;
 

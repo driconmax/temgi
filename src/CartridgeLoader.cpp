@@ -53,42 +53,109 @@ namespace temgi
 			return false;
 		}
 
-		CartridgeHeader header{};
+		file.seekg(0, std::ios::end);
+
+		const std::size_t cartridgeSize =
+			static_cast<std::size_t>(
+				file.tellg()
+			);
+
+		file.seekg(0, std::ios::beg);
+
+		cartridgeData_.resize(cartridgeSize);
 
 		file.read(
-			reinterpret_cast<char*>(&header),
-			sizeof(header)
+			reinterpret_cast<char*>(
+				cartridgeData_.data()
+			),
+			static_cast<std::streamsize>(
+				cartridgeData_.size()
+			)
 		);
 
 		if (!file)
 		{
-			std::cerr << "Could not read cartridge header.\n";
+			std::cerr
+				<< "Could not read cartridge ROM.\n";
+
+			return false;
+		}
+
+		file.clear();
+		file.seekg(0, std::ios::beg);
+
+		char magic[5];
+
+		std::uint32_t version = 0;
+		std::uint32_t codeSize = 0;
+		std::uint32_t assetCount = 0;
+		std::uint32_t assetTableOffset = 0;
+		std::uint32_t assetDataOffset = 0;
+
+		file.read(
+			magic,
+			5
+		);
+
+		file.read(
+			reinterpret_cast<char*>(&version),
+			sizeof(version)
+		);
+
+		file.read(
+			reinterpret_cast<char*>(&codeSize),
+			sizeof(codeSize)
+		);
+
+		file.read(
+			reinterpret_cast<char*>(&assetCount),
+			sizeof(assetCount)
+		);
+
+		file.read(
+			reinterpret_cast<char*>(&assetTableOffset),
+			sizeof(assetTableOffset)
+		);
+
+		file.read(
+			reinterpret_cast<char*>(&assetDataOffset),
+			sizeof(assetDataOffset)
+		);
+
+		if (!file)
+		{
+			std::cerr << "Could not read cartridge \n";
 			return false;
 		}
 
 		if (
-			header.magic[0] != 'T' ||
-			header.magic[1] != 'E' ||
-			header.magic[2] != 'M' ||
-			header.magic[3] != 'G' ||
-			header.magic[4] != 'I'
+			magic[0] != 'T' ||
+			magic[1] != 'E' ||
+			magic[2] != 'M' ||
+			magic[3] != 'G' ||
+			magic[4] != 'I'
 		)
 		{
 			std::cerr << "Invalid TEMGI cartridge.\n";
 			return false;
 		}
 
-		if (header.version != 1)
+		if (version != 1)
 		{
 			std::cerr
 				<< "Unsupported TEMGI cartridge version: "
-				<< header.version
+				<< version
 				<< '\n';
 
 			return false;
 		}
 
-		std::vector<char> code(header.codeSize);
+
+		assetCount_ = assetCount;
+		assetTableOffset_ = assetTableOffset;
+		assetDataOffset_ = assetDataOffset;
+
+		std::vector<char> code(codeSize);
 
 		file.read(
 			code.data(),
@@ -228,6 +295,27 @@ namespace temgi
 
     Asset CartridgeLoader::asset(const std::string &name) const
     {
-        return Asset();
+        for (std::uint32_t i = 0; i < assetCount_; i++)
+		{
+			const std::size_t entryPosition = static_cast<std::size_t>(assetTableOffset_) + static_cast<std::size_t>(i) * ASSET_ENTRY_SIZE;
+
+			const std::uint8_t* entry = cartridgeData_.data() + entryPosition;
+			const char* assetName = reinterpret_cast<const char*>(entry);
+
+			std::uint32_t offset = 0;
+			std::uint32_t size = 0;
+
+			std::memcpy(&offset, entry + ASSET_ENTRY_NAME_SIZE, sizeof(offset));
+			std::memcpy(&size, entry + ASSET_ENTRY_NAME_SIZE + sizeof(offset), sizeof(size));
+
+			if(name == assetName){
+				const std::size_t dataPosition = static_cast<std::size_t>(assetDataOffset_) + static_cast<std::size_t>(offset);
+
+				return Asset{cartridgeData_.data() + dataPosition,  size};
+			}
+		}
+
+		return Asset{};
+		
     }
 }
