@@ -1,5 +1,8 @@
 #include <temgi/Graphics.h>
 
+#include <temgi/Font.h>
+
+#include <temgi/internal/BitmapFont.h>
 #include "temgi/internal/GraphicsProcessor.h"
 
 namespace temgi
@@ -49,7 +52,12 @@ namespace temgi
 
     void Graphics::drawText(const std::string &text, std::uint16_t x, std::uint16_t y, Pixel color)
     {
-        processor_.drawText(text, x, y, color);
+        processor_.drawText(text, x, y, color, BitmapFont::font());
+    }
+
+    void Graphics::drawText(const std::string &text, std::uint16_t x, std::uint16_t y, Pixel color, const Font& font)
+    {
+        processor_.drawText(text, x, y, color, font);
     }
 
     const Graphics::Pixel* Graphics::frameBuffer() const

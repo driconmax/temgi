@@ -106,43 +106,106 @@ namespace temgi
         }
     }
 
-    void GraphicsProcessor::drawChar(char character, std::uint16_t x, std::uint16_t y, Pixel color)
+    void GraphicsProcessor::drawChar(char character, std::uint16_t x, std::uint16_t y, Pixel color, const Font& font)
     {
-        const BitmapFont::Glyph& glyph = BitmapFont::glyph(character);
+        const auto code = static_cast<std::uint8_t>(character);
 
-        for (std::uint8_t row = 0; row < BitmapFont::HEIGHT; row++)
+        std::size_t glyphIndex = 0;
+        bool found = false;
+
+        for (std::uint8_t i = 0; i < font.characterCount; ++i) {
+            if (font.characters[i] == character)
+            {
+                glyphIndex = i;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
         {
-            const std::uint8_t rowBits = glyph[row];
-            for (std::uint8_t column = 0; column < BitmapFont::WIDTH; column++){
-                const std::uint8_t bit = BitmapFont::WIDTH - 1 - column;
+            for (std::uint8_t i = 0; i < font.characterCount; ++i)
+            {
+                if (font.characters[i] == '?')
+                {
+                    glyphIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!found)
+        {
+            return;
+        }
 
-                if(rowBits & (1 << bit)){
-                    setPixel(x + column, y + row, color);
+        const std::size_t glyphOffset =
+            glyphIndex *
+            font.height;
+
+        const std::uint8_t* glyph =
+            font.glyphs +
+            glyphOffset;
+
+        for (
+            std::uint8_t row = 0;
+            row < font.height;
+            ++row
+        )
+        {
+            const std::uint8_t rowBits =
+                glyph[row];
+
+            for (
+                std::uint8_t column = 0;
+                column < font.width;
+                ++column
+            )
+            {
+                const std::uint8_t bit =
+                    font.width -
+                    1 -
+                    column;
+
+                if (rowBits & (1 << bit))
+                {
+                    setPixel(
+                        x + column,
+                        y + row,
+                        color
+                    );
                 }
             }
         }
         
     }
 
-    void GraphicsProcessor::drawText(const std::string& text, std::uint16_t x, std::uint16_t y, Pixel color)
+    void GraphicsProcessor::drawText(const std::string& text, std::uint16_t x, std::uint16_t y, Pixel color){
+        drawText(text, x, y, color, BitmapFont::font());
+    }
+
+    void GraphicsProcessor::drawText(const std::string& text, std::uint16_t x, std::uint16_t y, Pixel color, const Font& font)
     {
         std::uint16_t cursorX = x;
         std::uint16_t cursorY = y;
 
-        constexpr std::uint16_t CHARACTER_SPACING = 1;
-        constexpr std::uint16_t LINE_SPACING = 2;
+        constexpr std::uint16_t SPACING = 1;
 
-        for(char character : text){
-            if(character == '\n'){
+        for (char character : text)
+        {
+            if (character == '\n')
+            {
                 cursorX = x;
-                cursorY += BitmapFont::HEIGHT + LINE_SPACING;
+
+                cursorY += font.height + SPACING;
 
                 continue;
             }
 
-            drawChar(character, cursorX, cursorY, color);
+            drawChar(character, cursorX, cursorY, color, font);
 
-            cursorX += BitmapFont::WIDTH + CHARACTER_SPACING;
+            cursorX += font.width + SPACING;
         }
     }
 
