@@ -9,6 +9,7 @@ add_library(temgi STATIC
     src/MemoryRegion.cpp
     src/Graphics.cpp
     src/GraphicsProcessor.cpp
+    src/BitmapFont.cpp
     src/Input.cpp
     src/CartridgeLoader.cpp
 )

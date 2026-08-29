@@ -117,7 +117,7 @@ namespace temgi
             subscriber->onFrameStart();
         }
 
-        if (cartridgeLoader_.cartridge() != nullptr)
+        if (!failed_ && cartridgeLoader_.cartridge() != nullptr)
         {
             cartridgeLoader_.cartridge()->update(*this, deltaTime);
         }
@@ -130,9 +130,35 @@ namespace temgi
         }
     }
 
+    void Console::drawErrorOverlay()
+    {
+        constexpr std::uint8_t BLACK = 0x01;
+        constexpr std::uint8_t WHITE = 0xD8;
+        constexpr std::uint8_t RED = 0xB5;
+
+        constexpr std::uint16_t margin = 8;
+
+        graphicsProcessor_.drawSquare(margin, margin, ConsoleSpec::SCREEN_WIDTH - margin * 2, ConsoleSpec::SCREEN_HEIGHT - margin * 2, BLACK);
+
+        graphicsProcessor_.drawText("TEMGI ERROR", 16, 16, RED);
+        graphicsProcessor_.drawText(errorMessage_, 16, 32, WHITE);
+    }
+
     void Console::setButton(Button button, bool pressed)
     {
         input_.setButton(button, pressed);
+    }
+
+    void Console::fatalError(const std::string &message)
+    {
+        if(failed_){
+            return;
+        }
+
+        failed_ = true;
+        errorMessage_ = message;
+
+        drawErrorOverlay();
     }
 
     const std::uint8_t *Console::frameBuffer() const

@@ -47,6 +47,11 @@ namespace temgi
         );
     }
 
+    void Graphics::drawText(const std::string &text, std::uint16_t x, std::uint16_t y, Pixel color)
+    {
+        processor_.drawText(text, x, y, color);
+    }
+
     const Graphics::Pixel* Graphics::frameBuffer() const
     {
         return processor_.framebuffer();
