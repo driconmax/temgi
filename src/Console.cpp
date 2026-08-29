@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 namespace temgi
 {
@@ -37,10 +38,15 @@ namespace temgi
 
     bool Console::loadCartridge(const std::string &path)
     {
+        systemPrintLine("LOADING CARTRIDGE...");
         if(!cartridgeLoader_.load(path)){
+            systemPrintLine("CARTRIDGE LOAD FAILED");
+            presentSystemFrame();
             return false;
         }
-
+        systemPrintLine("CARTRIDGE OK");
+        presentSystemFrame();
+        
         return true;
     }
 
@@ -70,7 +76,19 @@ namespace temgi
             subscriber->onConsoleStart();
         }
 
+        systemClear();
+        systemPrintLine("TEMGI");
+        systemPrintLine("BOOTING...");
+        systemPrintLine("MEMORY OK.");
+        systemPrintLine("CARTRIDGE OK");
+        systemPrintLine("STARTING GAME");
+        
+        presentSystemFrame();
+
         using Clock = std::chrono::steady_clock;
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(2000)
+        );
 
         cartridgeLoader_.cartridge()->start(*this);
         
@@ -124,6 +142,8 @@ namespace temgi
 
         input_.nextFrame();
 
+        if(error_) drawErrorOverlay();
+
         for (ConsoleEventSubscriber* subscriber : subscribers_)
         {
             subscriber->onFrameEnd();
@@ -144,9 +164,42 @@ namespace temgi
         graphicsProcessor_.drawText(errorMessage_, 16, 32, WHITE);
     }
 
+    void Console::systemClear()
+    {
+        graphics_.clear(0x00);
+        systemCursorY_ = 0;
+    }
+
+    void Console::systemPrintLine(const std::string &text)
+    {
+        graphics_.drawText(text, 8, systemCursorY_, 0xFF);
+        systemCursorY_ += 9;
+    }
+
+    void Console::presentSystemFrame()
+    {
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onFrameStart();
+        }
+
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onFrameEnd();
+        }
+    }
+
     void Console::setButton(Button button, bool pressed)
     {
         input_.setButton(button, pressed);
+    }
+
+    void Console::error(const std::string &message)
+    {
+        error_ = true;
+        errorMessage_ = message;
+        
+        std::cerr << "[TEMGI ERROR] " << message << '\n';
     }
 
     void Console::fatalError(const std::string &message)
