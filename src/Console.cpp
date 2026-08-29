@@ -1,4 +1,5 @@
 #include "temgi/Console.h"
+#include "temgi/Asset.h"
 
 #include <thread>
 #include <chrono>
@@ -49,6 +50,11 @@ namespace temgi
         {
             cartridgeLoader_.unload();
         }
+    }
+
+    Asset Console::asset(const std::string &name) const
+    {
+        return cartridgeLoader_.asset(name);
     }
 
     void Console::run()

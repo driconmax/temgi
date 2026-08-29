@@ -23,6 +23,15 @@ namespace temgi
 		std::uint32_t codeSize;
 	};
 
+    constexpr std::size_t CARTRIDGE_HEADER_SIZE = 25;
+
+    constexpr std::size_t ASSET_ENTRY_NAME_SIZE = 64;
+
+    constexpr std::size_t ASSET_ENTRY_SIZE =
+        64 +    // name
+        4 +     // offset
+        4;      // size
+
 	CartridgeLoader::CartridgeLoader()
 	{
 	}
@@ -91,12 +100,7 @@ namespace temgi
 			std::cerr << "Could not read cartridge code.\n";
 			return false;
 		}
-
-		/*
-		 * dlopen() needs an actual dynamic library file.
-		 * So for the desktop simulator we temporarily extract
-		 * the compiled cartridge code.
-		 */
+		
 		auto temporaryPath =
 			std::filesystem::temp_directory_path() /
 			"temgi_cartridge.dylib";
@@ -221,4 +225,9 @@ namespace temgi
 	{
 		return cartridge_;
 	}
+
+    Asset CartridgeLoader::asset(const std::string &name) const
+    {
+        return Asset();
+    }
 }
