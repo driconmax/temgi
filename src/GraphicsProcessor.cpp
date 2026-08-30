@@ -113,6 +113,7 @@ namespace temgi
         std::size_t glyphIndex = 0;
         bool found = false;
 
+        character = static_cast<char>(std::toupper(static_cast<unsigned char>(character)));
         for (std::uint8_t i = 0; i < font.characterCount; ++i) {
             if (font.characters[i] == character)
             {
@@ -134,7 +135,7 @@ namespace temgi
                 }
             }
         }
-        
+
         if (!found)
         {
             return;
