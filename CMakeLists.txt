@@ -2,6 +2,25 @@ cmake_minimum_required(VERSION 3.20)
 
 project(temgi VERSION 0.1.0 LANGUAGES CXX)
 
+# Selects which of the two console profiles this build (and all its tools) targets.
+# OFF (default): 8-bit indexed console, 1 byte/pixel, low memory.
+# ON: truecolor console, 2 bytes/pixel (RGB565), a bit more memory per pixel.
+option(TEMGI_TRUECOLOR "Build temgi for the truecolor (RGB565) console instead of the 8-bit indexed console" OFF)
+
+if(TEMGI_TRUECOLOR)
+    set(TEMGI_PIXEL_RGB565 ON)
+endif()
+
+# Generated per build directory (not into include/) so building both console profiles
+# side by side (e.g. build/ and build-truecolor/) never clobbers each other's header.
+set(TEMGI_GENERATED_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated_include)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/temgi/PixelFormat.h.in
+    ${TEMGI_GENERATED_INCLUDE_DIR}/temgi/PixelFormat.h
+    @ONLY
+)
+
 add_library(temgi STATIC
     src/Console.cpp
     src/Memory.cpp
@@ -12,6 +31,11 @@ add_library(temgi STATIC
     src/BitmapFont.cpp
     src/Input.cpp
     src/CartridgeLoader.cpp
+)
+
+target_include_directories(temgi
+    PUBLIC
+        ${TEMGI_GENERATED_INCLUDE_DIR}
 )
 
 target_include_directories(temgi

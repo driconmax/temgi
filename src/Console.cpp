@@ -1,5 +1,6 @@
 #include "temgi/Console.h"
 #include "temgi/Asset.h"
+#include "temgi/Colors.h"
 
 #include <thread>
 #include <chrono>
@@ -152,16 +153,12 @@ namespace temgi
 
     void Console::drawErrorOverlay()
     {
-        constexpr std::uint8_t BLACK = 0x01;
-        constexpr std::uint8_t WHITE = 0xD8;
-        constexpr std::uint8_t RED = 0xB5;
-
         constexpr std::uint16_t margin = 8;
 
-        graphicsProcessor_.drawSquare(margin, margin, ConsoleSpec::SCREEN_WIDTH - margin * 2, ConsoleSpec::SCREEN_HEIGHT - margin * 2, BLACK);
+        graphicsProcessor_.drawSquare(margin, margin, ConsoleSpec::SCREEN_WIDTH - margin * 2, ConsoleSpec::SCREEN_HEIGHT - margin * 2, Colors::Black);
 
-        graphicsProcessor_.drawText("TEMGI ERROR", 16, 16, RED);
-        graphicsProcessor_.drawText(errorMessage_, 16, 32, WHITE);
+        graphicsProcessor_.drawText("TEMGI ERROR", 16, 16, Colors::Red);
+        graphicsProcessor_.drawText(errorMessage_, 16, 32, Colors::White);
     }
 
     void Console::systemClear()
@@ -214,7 +211,7 @@ namespace temgi
         drawErrorOverlay();
     }
 
-    const std::uint8_t *Console::frameBuffer() const
+    const Graphics::Pixel *Console::frameBuffer() const
     {
         return graphics_.frameBuffer();
     }

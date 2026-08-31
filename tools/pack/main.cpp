@@ -6,11 +6,14 @@
 #include <cstring>
 #include <string>
 
+#include <temgi/PixelFormat.h>
+
 namespace fs = std::filesystem;
 
 struct CartridgeHeader {
 	char magic[5] = {'T', 'E', 'M', 'G', 'I'};
-	std::uint32_t version = 1;
+	std::uint32_t version = 2;
+	std::uint8_t pixelFormat = static_cast<std::uint8_t>(temgi::CONSOLE_PIXEL_FORMAT);
 	std::uint32_t codeSize = 0;
 	std::uint32_t assetCount = 0;
 	std::uint32_t assetTableOffset = 0;
@@ -34,6 +37,7 @@ struct PackedAsset
 constexpr std::uint32_t CARTRIDGE_HEADER_SIZE = 
 	5 +     // MAGIC
 	4 +     // Version
+	1 +     // Pixel format
 	4 +     // Code Size
 	4 +     // Asset Count
 	4 +     // Asset Table Offset
@@ -166,6 +170,13 @@ int main(int argc, char const *argv[])
             &header.version
         ),
         sizeof(header.version)
+    );
+
+    output.write(
+        reinterpret_cast<const char*>(
+            &header.pixelFormat
+        ),
+        sizeof(header.pixelFormat)
     );
 
 

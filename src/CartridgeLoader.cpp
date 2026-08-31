@@ -8,6 +8,8 @@
 
 #include <dlfcn.h>
 
+#include <temgi/PixelFormat.h>
+
 namespace temgi
 {
 	using CreateCartridgeFunction =
@@ -20,10 +22,11 @@ namespace temgi
 	{
 		char magic[5];
 		std::uint32_t version;
+		std::uint8_t pixelFormat;
 		std::uint32_t codeSize;
 	};
 
-    constexpr std::size_t CARTRIDGE_HEADER_SIZE = 25;
+    constexpr std::size_t CARTRIDGE_HEADER_SIZE = 26;
 
     constexpr std::size_t ASSET_ENTRY_NAME_SIZE = 64;
 
@@ -87,6 +90,7 @@ namespace temgi
 		char magic[5];
 
 		std::uint32_t version = 0;
+		std::uint8_t pixelFormat = 0;
 		std::uint32_t codeSize = 0;
 		std::uint32_t assetCount = 0;
 		std::uint32_t assetTableOffset = 0;
@@ -100,6 +104,11 @@ namespace temgi
 		file.read(
 			reinterpret_cast<char*>(&version),
 			sizeof(version)
+		);
+
+		file.read(
+			reinterpret_cast<char*>(&pixelFormat),
+			sizeof(pixelFormat)
 		);
 
 		file.read(
@@ -140,12 +149,22 @@ namespace temgi
 			return false;
 		}
 
-		if (version != 1)
+		if (version != 2)
 		{
 			std::cerr
 				<< "Unsupported TEMGI cartridge version: "
 				<< version
 				<< '\n';
+
+			return false;
+		}
+
+		if (pixelFormat != static_cast<std::uint8_t>(CONSOLE_PIXEL_FORMAT))
+		{
+			std::cerr
+				<< "Cartridge was packed for a different console profile (pixel format "
+				<< static_cast<int>(pixelFormat)
+				<< ").\n";
 
 			return false;
 		}

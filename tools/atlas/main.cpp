@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include <temgi/PixelFormat.h>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -16,6 +18,7 @@ namespace fs = std::filesystem;
 
 struct ATimgHeader {
     char magic[5] = {'T', 'E', 'M', 'G', 'I'};
+    std::uint8_t pixelFormat = static_cast<std::uint8_t>(temgi::CONSOLE_PIXEL_FORMAT);
     std::uint16_t width = 0;
     std::uint16_t height = 0;
     std::uint16_t frameCount = 0;
@@ -113,6 +116,16 @@ std::uint8_t nearestColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, const 
     }
 
     return bestIndex;
+}
+
+// Packs an 8-bit-per-channel color into RGB565 (5 red / 6 green / 5 blue bits).
+std::uint16_t packRGB565(std::uint8_t r, std::uint8_t g, std::uint8_t b)
+{
+    return static_cast<std::uint16_t>(
+        ((r >> 3) << 11) |
+        ((g >> 2) << 5) |
+        (b >> 3)
+    );
 }
 
 
@@ -240,6 +253,8 @@ int main(int argc, char const *argv[])
     }
 
     const auto palette = createPalette();
+    constexpr std::size_t BYTES_PER_PIXEL =
+        (temgi::CONSOLE_PIXEL_FORMAT == temgi::PixelFormat::RGB565) ? 2 : 1;
 
     int animationWidth = 0;
     int animationHeight = 0;
@@ -293,7 +308,7 @@ int main(int argc, char const *argv[])
                 static_cast<std::size_t>(height) *
                 frames.size();
 
-            animationPixels.reserve(totalPixels);
+            animationPixels.reserve(totalPixels * BYTES_PER_PIXEL);
         }
         else if (
             width != animationWidth ||
@@ -343,7 +358,13 @@ int main(int argc, char const *argv[])
             std::uint8_t a =
                 image[sourceIndex + 3];
 
-            if (a == 0)
+            if constexpr (temgi::CONSOLE_PIXEL_FORMAT == temgi::PixelFormat::RGB565)
+            {
+                const std::uint16_t packed = (a == 0) ? 0x0000 : packRGB565(r, g, b);
+                animationPixels.push_back(static_cast<std::uint8_t>(packed & 0xFF));
+                animationPixels.push_back(static_cast<std::uint8_t>(packed >> 8));
+            }
+            else if (a == 0)
             {
                 animationPixels.push_back(0x00);
             }
@@ -397,6 +418,11 @@ int main(int argc, char const *argv[])
     output.write(
         header.magic,
         5
+    );
+
+    output.write(
+        reinterpret_cast<const char*>(&header.pixelFormat),
+        sizeof(header.pixelFormat)
     );
 
     output.write(

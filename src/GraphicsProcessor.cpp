@@ -77,7 +77,7 @@ namespace temgi
             static_cast<std::size_t>(animation.width) *
             static_cast<std::size_t>(animation.height);
 
-        const std::uint8_t* framePixels =
+        const Pixel* framePixels =
             animation.pixels +
             frameSize * frame;
 
