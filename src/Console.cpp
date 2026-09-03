@@ -191,6 +191,26 @@ namespace temgi
         input_.setButton(button, pressed);
     }
 
+    void Console::setControllerBackend(ControllerBackend* backend)
+    {
+        input_.setControllerBackend(backend);
+    }
+
+    void Console::setControllerConnected(int index, bool connected)
+    {
+        input_.controller(index).setConnected(connected);
+    }
+
+    void Console::setControllerButton(int index, ControllerButton button, bool pressed)
+    {
+        input_.controller(index).setButton(button, pressed);
+    }
+
+    void Console::setControllerAxis(int index, ControllerAxis axis, float value)
+    {
+        input_.controller(index).setAxis(axis, value);
+    }
+
     void Console::error(const std::string &message)
     {
         error_ = true;

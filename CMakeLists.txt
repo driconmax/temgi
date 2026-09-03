@@ -30,6 +30,7 @@ add_library(temgi STATIC
     src/GraphicsProcessor.cpp
     src/BitmapFont.cpp
     src/Input.cpp
+    src/Controller.cpp
     src/CartridgeLoader.cpp
 )
 
