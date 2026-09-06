@@ -44,8 +44,17 @@ namespace temgi
         }
     }
 
-    void GraphicsProcessor::drawImage(const Image &image, std::uint16_t x, std::uint16_t y)
+    void GraphicsProcessor::drawImage(const Image &image, std::uint16_t x, std::uint16_t y, Pivot pivot)
     {
+        int originX = x;
+        int originY = y;
+
+        if (pivot == Pivot::Center)
+        {
+            originX -= image.width / 2;
+            originY -= image.height / 2;
+        }
+
         for (std::uint16_t iy = 0; iy < image.height; iy++)
         {
             for (std::uint16_t ix = 0; ix < image.width; ix++)
@@ -56,7 +65,12 @@ namespace temgi
 
                 if(pixel == 0x00) continue;
 
-                setPixel(x + ix, y + iy, pixel);
+                const int px = originX + ix;
+                const int py = originY + iy;
+
+                if (px < 0 || py < 0) continue;
+
+                setPixel(static_cast<std::uint16_t>(px), static_cast<std::uint16_t>(py), pixel);
             }
         }
         
@@ -66,7 +80,8 @@ namespace temgi
         const Animation& animation,
         std::uint16_t frame,
         std::uint16_t x,
-        std::uint16_t y)
+        std::uint16_t y,
+        Pivot pivot)
     {
         if (frame >= animation.frameCount)
         {
@@ -80,6 +95,15 @@ namespace temgi
         const Pixel* framePixels =
             animation.pixels +
             frameSize * frame;
+
+        int originX = x;
+        int originY = y;
+
+        if (pivot == Pivot::Center)
+        {
+            originX -= animation.width / 2;
+            originY -= animation.height / 2;
+        }
 
         for (std::uint16_t iy = 0; iy < animation.height; ++iy)
         {
@@ -97,9 +121,14 @@ namespace temgi
                     continue;
                 }
 
+                const int px = originX + ix;
+                const int py = originY + iy;
+
+                if (px < 0 || py < 0) continue;
+
                 setPixel(
-                    x + ix,
-                    y + iy,
+                    static_cast<std::uint16_t>(px),
+                    static_cast<std::uint16_t>(py),
                     pixel
                 );
             }
@@ -208,6 +237,16 @@ namespace temgi
 
             cursorX += font.width + SPACING;
         }
+    }
+
+    std::uint16_t GraphicsProcessor::measureText(const std::string& text, const Font& font) const
+    {
+        if (text.empty())
+        {
+            return 0;
+        }
+
+        return static_cast<std::uint16_t>(text.size() * (font.width + 1) - 1);
     }
 
     const GraphicsProcessor::Pixel* GraphicsProcessor::framebuffer() const

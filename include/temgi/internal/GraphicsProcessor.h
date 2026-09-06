@@ -8,6 +8,7 @@
 #include <temgi/Animation.h>
 #include <temgi/Font.h>
 #include <temgi/PixelFormat.h>
+#include <temgi/Pivot.h>
 
 namespace temgi
 {
@@ -24,14 +25,17 @@ namespace temgi
             void drawImage(
                 const Image& image,
                 std::uint16_t x,
-                std::uint16_t y
+                std::uint16_t y,
+                Pivot pivot = Pivot::TopLeft
             );
 
-            void drawAnimationFrame(const Animation& animation, std::uint16_t frame, std::uint16_t x, std::uint16_t y);
+            void drawAnimationFrame(const Animation& animation, std::uint16_t frame, std::uint16_t x, std::uint16_t y, Pivot pivot = Pivot::TopLeft);
 
             void drawChar(char character, std::uint16_t x, std::uint16_t y, Pixel color, const Font& font);
             void drawText(const std::string& text, std::uint16_t x, std::uint16_t y, Pixel color);
             void drawText(const std::string& text, std::uint16_t x, std::uint16_t y, Pixel color, const Font& font);
+
+            std::uint16_t measureText(const std::string& text, const Font& font) const;
 
             const Pixel* framebuffer() const;
 
