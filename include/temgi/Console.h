@@ -36,6 +36,10 @@ namespace temgi
             void run();
             void stop();
 
+            // Forwarded to whichever platform subscriber owns the window (e.g. SDLPlatform);
+            // no-op if no subscriber implements it.
+            void toggleFullscreen();
+
             void setButton(Button button, bool pressed);
 
             // Registered by the platform layer (e.g. SDLInput) so Controller::rumble()/trigger()

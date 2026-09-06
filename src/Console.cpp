@@ -129,6 +129,14 @@ namespace temgi
         }
     }
 
+    void Console::toggleFullscreen()
+    {
+        for (ConsoleEventSubscriber* subscriber : subscribers_)
+        {
+            subscriber->onToggleFullscreenRequested();
+        }
+    }
+
     void Console::update(float deltaTime)
     {
         for (ConsoleEventSubscriber* subscriber : subscribers_)

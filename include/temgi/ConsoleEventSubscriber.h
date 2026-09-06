@@ -13,5 +13,10 @@ namespace temgi
             virtual void onFrameStart() {}
             virtual void onFrameEnd() {}
 
+            // Platform-level window request; the console itself has no concept
+            // of a window, this just fans the request out to subscribers (e.g.
+            // the SDL platform layer) that do.
+            virtual void onToggleFullscreenRequested() {}
+
     };
 } // namespace temgi
